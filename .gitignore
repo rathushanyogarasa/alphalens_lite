@@ -25,3 +25,6 @@ logs/
 .DS_Store
 Thumbs.db
 .vscode/
+
+# Test cache
+.pytest_cache/

@@ -8,3 +8,4 @@ torch>=2.2
 tqdm>=4.66
 transformers>=4.40
 yfinance>=0.2.40
+pytest>=8.2

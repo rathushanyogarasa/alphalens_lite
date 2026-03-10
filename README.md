@@ -32,3 +32,10 @@ AlphaLens Lite is a compact, reproducible version of AlphaLens for an undergradu
 - Use cache-first defaults (`refresh=False`) to avoid repeated data downloads.
 - Model training is the most expensive step; reuse `results/model/weights.pt` when possible.
 - Backtest/evaluation are designed to run quickly on CPU.
+
+## Phase 3 Commands
+- Run quick pipeline (cheap settings): `python scripts/run_pipeline.py --lite --skip-sentiment`
+- Run full pipeline: `python scripts/run_pipeline.py --full`
+- Run smoke test: `python smoke_test.py`
+- Run tests: `python -m pytest -q`
+
