@@ -1,0 +1,27 @@
+﻿# Python artifacts
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+
+# Env
+.env
+.venv/
+venv/
+
+# Notebook artifacts
+.ipynb_checkpoints/
+
+# Data and outputs (keep directory structure, skip generated content)
+data/raw/
+data/processed/
+results/model/
+results/plots/
+results/metrics/
+logs/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
