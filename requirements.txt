@@ -1,0 +1,10 @@
+﻿datasets>=2.19
+matplotlib>=3.8
+numpy>=1.26
+pandas>=2.2
+requests>=2.31
+scikit-learn>=1.4
+torch>=2.2
+tqdm>=4.66
+transformers>=4.40
+yfinance>=0.2.40

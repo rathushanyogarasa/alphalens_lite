@@ -1,14 +1,14 @@
-"""config.py — AlphaLens Lite
+﻿"""config.py â€” AlphaLens Lite
 Single source of truth for all constants.
 Change things here, not inside src/ modules.
 """
 
 from pathlib import Path
 
-# ── Reproducibility ────────────────────────────────────────────────────────
+# â”€â”€ Reproducibility â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 RANDOM_SEED = 42
 
-# ── Universe (30 tickers: 3 per sector across 10 GICS sectors) ─────────────
+# â”€â”€ Universe (30 tickers: 3 per sector across 10 GICS sectors) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 TICKERS: list[str] = [
     "AAPL", "MSFT", "NVDA",    # Technology
     "JPM",  "GS",   "BAC",     # Financials
@@ -22,7 +22,7 @@ TICKERS: list[str] = [
     "NEE",  "DUK",  "SO",      # Utilities
 ]
 
-# ── FinBERT model ────────────────────────────────────────────────────────────
+# â”€â”€ FinBERT model â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 MODEL_NAME           = "ProsusAI/finbert"
 BATCH_SIZE           = 16       # reduce to 8 if you run out of GPU memory
 EPOCHS               = 3
@@ -32,12 +32,12 @@ WARMUP_RATIO         = 0.1      # fraction of total steps used for linear warmup
 MAX_LENGTH           = 128      # max tokens per headline
 CONFIDENCE_THRESHOLD = 0.70     # below this the model returns "uncertain"
 
-# ── Training dataset splits ──────────────────────────────────────────────────
+# â”€â”€ Training dataset splits â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 TRAIN_SPLIT = 0.70
 VAL_SPLIT   = 0.15
 TEST_SPLIT  = 0.15
 
-# ── Champion strategy ────────────────────────────────────────────────────────
+# â”€â”€ Champion strategy â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 # These values were derived via ablation study (Notebook 04).
 # Do NOT change here unless you have re-run the ablation.
 FACTOR_WEIGHTS: dict[str, float] = {
@@ -51,12 +51,20 @@ TRANSACTION_COST_BPS = 10.0     # one-way cost in basis points
 SLIPPAGE_BPS         = 5.0      # one-way slippage in basis points
 RISK_FREE_RATE       = 0.045    # annualised, used for Sharpe calculation
 
-# ── GDELT data fetcher ───────────────────────────────────────────────────────
+# â”€â”€ GDELT data fetcher â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 GDELT_LOOKBACK_DAYS  = 365      # history to fetch per ticker (free, no limit)
 GDELT_MAX_RECORDS    = 250      # articles per ticker per query (GDELT hard cap)
 GDELT_SLEEP_SECS     = 6.0      # seconds between requests (GDELT rate limit)
 
-# ── Directories (created automatically on import) ────────────────────────────
+
+# -- Market data / factor windows -------------------------------------------------
+MARKET_PROVIDER      = "yfinance"  # current lite provider
+MARKET_START_DATE    = "2020-01-01"
+MARKET_END_DATE      = None        # None -> today
+MOMENTUM_WINDOW      = 20          # trading days
+VOLATILITY_WINDOW    = 20          # trading days
+MIN_FACTOR_OBS       = 15          # minimum observations for rolling factors
+# â”€â”€ Directories (created automatically on import) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 BASE_DIR      = Path(__file__).parent
 DATA_DIR      = BASE_DIR / "data"
 RAW_DIR       = DATA_DIR / "raw"
@@ -68,3 +76,4 @@ METRICS_DIR   = RESULTS_DIR / "metrics"
 
 for _d in (RAW_DIR, PROCESSED_DIR, MODEL_DIR, PLOTS_DIR, METRICS_DIR):
     _d.mkdir(parents=True, exist_ok=True)
+
