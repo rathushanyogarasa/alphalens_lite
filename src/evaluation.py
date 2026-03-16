@@ -1,7 +1,5 @@
 ﻿"""src/evaluation.py - Lightweight performance analytics for AlphaLens Lite."""
 
-from __future__ import annotations
-
 import logging
 import math
 
@@ -12,6 +10,7 @@ import numpy as np
 import pandas as pd
 
 import config
+from src.utils import validate_columns
 
 logger = logging.getLogger(__name__)
 
@@ -23,15 +22,9 @@ _EQUITY_PLOT_PATH = config.PLOTS_DIR / "equity_curve.png"
 _REQUIRED_DAILY_COLS = {"date", "portfolio_ret", "benchmark_ret", "portfolio_nav", "drawdown"}
 
 
-def _validate_columns(df: pd.DataFrame, required: set[str], name: str) -> None:
-    missing = required - set(df.columns)
-    if missing:
-        raise ValueError(f"{name} is missing required columns: {sorted(missing)}")
-
-
 def compute_performance_metrics(daily: pd.DataFrame, risk_free_rate: float = config.RISK_FREE_RATE) -> dict[str, float]:
     """Compute core strategy and benchmark metrics."""
-    _validate_columns(daily, _REQUIRED_DAILY_COLS, "daily")
+    validate_columns(daily, _REQUIRED_DAILY_COLS, "daily")
 
     df = daily.copy()
     df["date"] = pd.to_datetime(df["date"]).dt.normalize()
@@ -76,8 +69,8 @@ def compute_information_coefficient(alpha_df: pd.DataFrame, market_panel: pd.Dat
     """Compute daily cross-sectional rank IC between alpha_score and fwd_ret_1d."""
     required_alpha = {"date", "ticker", "alpha_score"}
     required_panel = {"date", "ticker", "fwd_ret_1d"}
-    _validate_columns(alpha_df, required_alpha, "alpha_df")
-    _validate_columns(market_panel, required_panel, "market_panel")
+    validate_columns(alpha_df, required_alpha, "alpha_df")
+    validate_columns(market_panel, required_panel, "market_panel")
 
     alpha = alpha_df[["date", "ticker", "alpha_score"]].copy()
     panel = market_panel[["date", "ticker", "fwd_ret_1d"]].copy()

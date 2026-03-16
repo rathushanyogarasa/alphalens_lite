@@ -1,7 +1,5 @@
 ﻿"""src/sentiment_factor.py - Headline scoring and daily sentiment factor."""
 
-from __future__ import annotations
-
 import logging
 
 import pandas as pd
@@ -9,6 +7,7 @@ import pandas as pd
 import config
 from src.gdelt_fetcher import fetch_gdelt
 from src.model import FinBERTClassifier, SIGNAL_MAP
+from src.utils import cross_section_zscore
 
 logger = logging.getLogger(__name__)
 
@@ -57,14 +56,6 @@ def score_headlines(headlines: pd.DataFrame, model: FinBERTClassifier | None = N
     return df[["date", "ticker", "headline", "label_name", "confidence", "signal", "sentiment_raw"]]
 
 
-def _cross_section_zscore(df: pd.DataFrame, col: str, out_col: str) -> pd.DataFrame:
-    stats = df.groupby("date")[col].agg(["mean", "std"]).rename(columns={"mean": "mu", "std": "sigma"})
-    out = df.join(stats, on="date")
-    out[out_col] = (out[col] - out["mu"]) / out["sigma"].replace(0, pd.NA)
-    out[out_col] = out[out_col].fillna(0.0)
-    return out.drop(columns=["mu", "sigma"])
-
-
 def aggregate_daily_sentiment(scored_headlines: pd.DataFrame) -> pd.DataFrame:
     """Aggregate article-level sentiment to daily ticker factor."""
     daily = (
@@ -76,7 +67,7 @@ def aggregate_daily_sentiment(scored_headlines: pd.DataFrame) -> pd.DataFrame:
             mean_confidence=("confidence", "mean"),
         )
     )
-    daily = _cross_section_zscore(daily, "sentiment_raw", "sentiment_z")
+    daily = cross_section_zscore(daily, "sentiment_raw", "sentiment_z")
     return daily.sort_values(["date", "ticker"]).reset_index(drop=True)
 
 

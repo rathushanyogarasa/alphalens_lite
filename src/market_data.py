@@ -1,7 +1,5 @@
 ﻿"""src/market_data.py - Price data ingestion and return panel builder."""
 
-from __future__ import annotations
-
 import logging
 from datetime import date
 from pathlib import Path
@@ -23,12 +21,6 @@ def _normalize_tickers(tickers: list[str] | None) -> list[str]:
     if not out:
         raise ValueError("No tickers were provided.")
     return out
-
-
-def _default_end_date(end_date: str | None) -> str:
-    if end_date:
-        return end_date
-    return date.today().strftime("%Y-%m-%d")
 
 
 def _fetch_prices_yfinance(tickers: list[str], start_date: str, end_date: str) -> pd.DataFrame:
@@ -79,7 +71,7 @@ def load_prices(
     """Load wide price matrix indexed by date, columns=tickers."""
     tickers = _normalize_tickers(tickers)
     start_date = start_date or config.MARKET_START_DATE
-    end_date = _default_end_date(end_date or config.MARKET_END_DATE)
+    end_date = end_date or config.MARKET_END_DATE or date.today().strftime("%Y-%m-%d")
 
     if _RAW_PRICE_CACHE.exists() and not refresh:
         cached = pd.read_csv(_RAW_PRICE_CACHE, parse_dates=["date"]).set_index("date")

@@ -1,6 +1,4 @@
-﻿from __future__ import annotations
-
-import math
+﻿import math
 
 from src.backtest import run_backtest
 from src.evaluation import compute_performance_metrics, run_evaluation

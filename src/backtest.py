@@ -1,13 +1,12 @@
 ﻿"""src/backtest.py - Fast non-overlapping long/short backtest for AlphaLens Lite."""
 
-from __future__ import annotations
-
 import logging
 
 import numpy as np
 import pandas as pd
 
 import config
+from src.utils import validate_columns
 
 logger = logging.getLogger(__name__)
 
@@ -19,12 +18,6 @@ _BACKTEST_POSITIONS_PATH = config.METRICS_DIR / "positions.csv"
 
 _REQUIRED_ALPHA_COLS = {"date", "ticker", "alpha_score"}
 _REQUIRED_MARKET_COLS = {"date", "ticker", "ret_1d"}
-
-
-def _validate_columns(df: pd.DataFrame, required: set[str], name: str) -> None:
-    missing = required - set(df.columns)
-    if missing:
-        raise ValueError(f"{name} is missing required columns: {sorted(missing)}")
 
 
 def _load_default_inputs() -> tuple[pd.DataFrame, pd.DataFrame]:
@@ -39,8 +32,8 @@ def _load_default_inputs() -> tuple[pd.DataFrame, pd.DataFrame]:
 
 
 def _prepare_frames(alpha_df: pd.DataFrame, market_panel: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
-    _validate_columns(alpha_df, _REQUIRED_ALPHA_COLS, "alpha_df")
-    _validate_columns(market_panel, _REQUIRED_MARKET_COLS, "market_panel")
+    validate_columns(alpha_df, _REQUIRED_ALPHA_COLS, "alpha_df")
+    validate_columns(market_panel, _REQUIRED_MARKET_COLS, "market_panel")
 
     alpha = alpha_df.copy()
     alpha["date"] = pd.to_datetime(alpha["date"]).dt.normalize()

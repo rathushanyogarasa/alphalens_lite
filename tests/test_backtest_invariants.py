@@ -1,6 +1,4 @@
-﻿from __future__ import annotations
-
-import pytest
+﻿import pytest
 
 from src.backtest import run_backtest
 from src.factor_engine import build_alpha_factors

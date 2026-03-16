@@ -5,8 +5,6 @@ Examples:
   python scripts/run_pipeline.py --full --skip-sentiment
 """
 
-from __future__ import annotations
-
 import argparse
 import logging
 from datetime import date, timedelta

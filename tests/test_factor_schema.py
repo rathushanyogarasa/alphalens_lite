@@ -1,6 +1,4 @@
-﻿from __future__ import annotations
-
-from src.factor_engine import build_alpha_factors
+﻿from src.factor_engine import build_alpha_factors
 
 
 def test_alpha_factor_schema(make_synthetic_inputs):

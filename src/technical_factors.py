@@ -1,25 +1,16 @@
 ﻿"""src/technical_factors.py - Momentum and volatility factor computation."""
 
-from __future__ import annotations
-
 import logging
 
 import pandas as pd
 
 import config
 from src.market_data import load_prices
+from src.utils import cross_section_zscore
 
 logger = logging.getLogger(__name__)
 
 _TECHNICAL_FACTOR = config.PROCESSED_DIR / "technical_factors.csv"
-
-
-def _cross_section_zscore(long_df: pd.DataFrame, col: str, out_col: str) -> pd.DataFrame:
-    stats = long_df.groupby("date")[col].agg(["mean", "std"]).rename(columns={"mean": "mu", "std": "sigma"})
-    out = long_df.join(stats, on="date")
-    out[out_col] = (out[col] - out["mu"]) / out["sigma"].replace(0, pd.NA)
-    out[out_col] = out[out_col].fillna(0.0)
-    return out.drop(columns=["mu", "sigma"])
 
 
 def compute_technical_factors(
@@ -50,8 +41,8 @@ def compute_technical_factors(
     factors["date"] = pd.to_datetime(factors["date"]).dt.normalize()
     factors["ticker"] = factors["ticker"].astype(str).str.upper().str.strip()
 
-    factors = _cross_section_zscore(factors, "momentum_raw", "momentum_z")
-    factors = _cross_section_zscore(factors, "volatility_raw", "volatility_z")
+    factors = cross_section_zscore(factors, "momentum_raw", "momentum_z")
+    factors = cross_section_zscore(factors, "volatility_raw", "volatility_z")
 
     return factors.sort_values(["date", "ticker"]).reset_index(drop=True)
 

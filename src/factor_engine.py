@@ -1,12 +1,11 @@
 ﻿"""src/factor_engine.py - Lightweight multi-factor fusion for AlphaLens Lite."""
 
-from __future__ import annotations
-
 import logging
 
 import pandas as pd
 
 import config
+from src.utils import validate_columns
 
 logger = logging.getLogger(__name__)
 
@@ -17,12 +16,6 @@ _TECHNICAL_PATH = config.PROCESSED_DIR / "technical_factors.csv"
 
 _REQUIRED_TECH_COLS = {"date", "ticker", "momentum_z", "volatility_z"}
 _REQUIRED_SENT_COLS = {"date", "ticker", "sentiment_z"}
-
-
-def _validate_columns(df: pd.DataFrame, required: set[str], name: str) -> None:
-    missing = required - set(df.columns)
-    if missing:
-        raise ValueError(f"{name} is missing required columns: {sorted(missing)}")
 
 
 def _load_default_inputs() -> tuple[pd.DataFrame, pd.DataFrame]:
@@ -49,8 +42,8 @@ def build_alpha_factors(
     weights: dict[str, float] | None = None,
 ) -> pd.DataFrame:
     """Merge sentiment + technical factors and compute a composite alpha score."""
-    _validate_columns(technical_df, _REQUIRED_TECH_COLS, "technical_df")
-    _validate_columns(sentiment_df, _REQUIRED_SENT_COLS, "sentiment_df")
+    validate_columns(technical_df, _REQUIRED_TECH_COLS, "technical_df")
+    validate_columns(sentiment_df, _REQUIRED_SENT_COLS, "sentiment_df")
 
     w = _normalize_weights(weights or config.FACTOR_WEIGHTS)
 

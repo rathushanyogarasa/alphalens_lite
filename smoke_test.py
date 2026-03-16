@@ -4,8 +4,6 @@ Runs synthetic data through:
     factor_engine -> backtest -> evaluation
 """
 
-from __future__ import annotations
-
 import json
 
 import numpy as np
